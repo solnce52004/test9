@@ -2,41 +2,27 @@ version: "3.9"
 services:
   db:
     build: ./docker/db
-    #    env_file:
-    #      - .env
     ports:
       - ${DB_PORT}:${DB_CONTAINER_PORT}
-    #      - 8306:3306
     volumes:
-      - /etc/mysql/conf.d:/etc/mysql/conf.d
       - ${DB_WORKDIR}:${DB_CONTAINER_WORKDIR}
+      - ${DB_CONFD_WORKDIR}:${DB_CONFD_CONTAINER_WORKDIR}
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: "root"
+      MYSQL_USER: ${DB_USER}
     restart: always
 
   app:
     build:
       context: .
-      dockerfile: docker/app/Dockerfile
+      dockerfile: ./docker/app/Dockerfile
     ports:
-      - ${APP_PORT}:${APP_CONTAINER_PORT}
-    #    env_file:
-    #      - .env
-    working_dir: ${APP_CONTAINER_WORKDIR}
+      - ${APP_PORT_PROD}:${APP_CONTAINER_PORT}
     container_name: cont_app
     volumes:
       - ${APP_WORKDIR}:${APP_CONTAINER_WORKDIR}
       - ${APP_LOG_WORKDIR}:${APP_LOG_CONTAINER_WORKDIR}
-    links:
-      - db
     depends_on:
       - db
-    restart: always
-
-  adminer:
-    build: ./docker/adminer
-    ports:
-      - "6080:8080"
     restart: always
