@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   db:
+    container_name: container_db
     build: ./docker/db
     ports:
       - ${DB_PORT}:${DB_CONTAINER_PORT}
@@ -13,13 +14,32 @@ services:
       MYSQL_USER: ${DB_USER}
     restart: always
 
+    mongo:
+      image: 'mongo:4.4.0-rc8-bionic'
+      restart: on-failure
+      ports:
+        - 27017:27017
+      volumes:
+        - ./.mongo-volume:/data/db
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: root@123
+    mongo-express:
+      image: mongo-express
+      restart: always
+      ports:
+        - 8081:8081
+      environment:
+        ME_CONFIG_MONGODB_ADMINUSERNAME: root
+        ME_CONFIG_MONGODB_ADMINPASSWORD: root@123
+
   app:
+    container_name: container_app
     build:
       context: .
       dockerfile: ./docker/app/Dockerfile
     ports:
       - ${APP_PORT}:${APP_CONTAINER_PORT}
-    container_name: cont_app
     volumes:
       - ${APP_WORKDIR}:${APP_CONTAINER_WORKDIR}
       - ${APP_LOG_WORKDIR}:${APP_LOG_CONTAINER_WORKDIR}

@@ -12,19 +12,25 @@ import reactor.core.publisher.Mono;
 public class UserService {
     private final UserRepository userRepository;
 
-    public Flux<User> findAll(){
+    public Flux<User> findAll() {
         return userRepository.findAll();
     }
 
-    public Mono<User> findById(Long id){
+    //    public Mono<User> findById(Long id){
+    public Mono<User> findById(String id) {
         return userRepository.findById(id);
     }
 
-    public Mono<User> save(User user){
+    public Mono<User> save(User user) {
         return userRepository.save(user);
     }
 
-    public Mono<Void> deleteById(Long id){
+//    public Mono<Void> deleteById(Long id) {
+    public Mono<Void> deleteById(String id) {
         return userRepository.deleteById(id);
+    }
+
+    public Flux<User> findAllByName(String name) {
+        return userRepository.findAllByName(name);
     }
 }

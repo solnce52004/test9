@@ -30,8 +30,16 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public Mono<User> userById(@PathVariable("id") Long id) {
+    public Mono<User> userById(
+//            @PathVariable("id") Long id
+            @PathVariable("id") String id //mongo
+    ) {
         return userService.findById(id);
+    }
+    //mongo
+    @GetMapping("/name/{name}")
+    public Flux<User> findAllByAdminName( @PathVariable("name") String name  ) {
+        return userService.findAllByName(name);
     }
 
     @PostMapping
@@ -40,7 +48,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public Mono<Void> deleteById(@PathVariable("id") Long id) {
+    public Mono<Void> deleteById(
+//            @PathVariable("id") Long id
+            @PathVariable("id") String id
+    ) {
         return userService.deleteById(id);
     }
 }
