@@ -27,11 +27,6 @@ class UserServiceTest {
 
     @Test
     void findById() {
-        userRepository
-//                .findById(1L)
-                .findById("1L")
-                .defaultIfEmpty(new User())
-                .subscribe(System.out::println);
     }
 
     @Test
